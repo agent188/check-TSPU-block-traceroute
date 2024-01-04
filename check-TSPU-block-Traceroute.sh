@@ -1,15 +1,32 @@
 #!/bin/bash
-read -r -p "Input hex packet(Paste TLS Client Hello, TCP payload): " packet
+while [ "$#" -gt 0 ] ; do
+  case "${1}" in
+    (--packet)  packet="${2}" ; shift ;;
+    (--ip)  ip="${2}" ; shift ;;
+    (--port)  port="${2}" ; shift ;;
+    (--packet=?*)  packet="${1#--packet=}" ;;
+    (--port=?*)  port="${1#--port=}" ;;
+    (--ip=?*)  ip="${1#--ip=}" ;;
+  esac
+  shift
+done
+if [[ ! $packet ]]; then
+	read -r -p "Input hex packet(Paste TLS Client Hello, TCP payload): " packet
+fi
 if [[ ! $packet ]]; then
 	echo "ERROR: Empty packet!"
 	exit 1
 fi
-read -r -p "Input IP: " ip
+if [[ ! $ip ]]; then
+	read -r -p "Input IP: " ip
+fi
 if [[ ! $ip ]]; then
 	echo "ERROR: Empty IP!"
 	exit 1
 fi
-read -r -p "Input port(Default HTTPS port 443): " port
+if [[ ! $port ]]; then
+	read -r -p "Input port(Default HTTPS port 443): " port
+fi
 if [[ ! $port ]]; then
 	port="443"
 fi
